@@ -1,18 +1,24 @@
-import { FC } from 'react';
+import { FC } from "react";
+import { Link } from "react-router-dom";
 import "./CardItem.scss";
 
-interface CardItemProps {}
+interface CardItemProps {
+  id: number;
+  name: string;
+  imgUrl: string;
+  specie: string;
+}
 
-const CardItem: FC<CardItemProps> = ({}) => {
+const CardItem: FC<CardItemProps> = ({ id, name, imgUrl, specie }) => {
   return (
-    <div className='carditem'>
-      <img src="https://place-hold.it/300" alt="item" className='carditem__img' />
-        <div className="carditem__info">
-        <h3 className='carditem__name'>Rick Sanchez</h3>
-        <p className='carditem__specie'>Human</p>
+    <Link to={`/${id}`} className="carditem">
+      <img src={imgUrl} alt="Character Avatar" className="carditem__img" />
+      <div className="carditem__info">
+        <h3 className="carditem__name">{name}</h3>
+        <p className="carditem__specie">{specie}</p>
       </div>
-    </div>
-  )
+    </Link>
+  );
 };
 
 export default CardItem;

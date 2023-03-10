@@ -1,14 +1,46 @@
-import { FC, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import Container from "../../components/Container/Container";
 import logo from "../../assets/images/logo.png";
 import searchIcon from "../../assets/images/search.svg";
 import "./CharactersListPage.scss";
-import CardItem from '../../components/CardItem/CardItem';
+import CardItem from "../../components/CardItem/CardItem";
+import { ICharacter, ICharactersResponse } from "../../types/charactersRes";
 
 interface CharactersListPageProps {}
 
 const CharactersListPage: FC<CharactersListPageProps> = ({}) => {
-  const [characters, setCharacters] = useState(['1', '2', '3', '4', '5', '6', '7', '8']);
+  const [characters, setCharacters] = useState<ICharacter[]>([]);
+  const [searchName, setSearchName] = useState<string>(
+    localStorage.getItem("searchKeyWord") || ""
+  );
+
+  const fetchCharacters = async () => {
+    try {
+      const response = await fetch(
+        `https://rickandmortyapi.com/api/character/?name=${searchName}`
+      );
+      const data: ICharactersResponse = await response.json();
+      if (data.results) {
+        const sortedCharactersArr: ICharacter[] = data.results.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setCharacters(sortedCharactersArr);
+      } else {
+        setCharacters([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchName(e.target.value);
+    localStorage.setItem("searchKeyWord", e.target.value);
+  };
+
+  useEffect(() => {
+    fetchCharacters();
+  }, [searchName]);
 
   return (
     <div className="characters">
@@ -19,6 +51,8 @@ const CharactersListPage: FC<CharactersListPageProps> = ({}) => {
             type="text"
             placeholder="Filter by name..."
             className="characters__filter"
+            onChange={(e) => handleInputChange(e)}
+            value={searchName}
           />
           <img
             src={searchIcon}
@@ -26,9 +60,15 @@ const CharactersListPage: FC<CharactersListPageProps> = ({}) => {
             className="characters__searchicon"
           />
         </form>
-        <div className='characters__list'>
-          {characters.map(character => (
-            <CardItem />
+        <div className="characters__list">
+          {characters.map((character: ICharacter) => (
+            <CardItem
+              key={`character-${character.id}`}
+              id={character.id}
+              name={character.name}
+              imgUrl={character.image}
+              specie={character.species}
+            />
           ))}
         </div>
       </Container>
