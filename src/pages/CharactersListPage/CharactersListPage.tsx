@@ -13,11 +13,13 @@ const CharactersListPage: FC<CharactersListPageProps> = ({}) => {
   const [searchName, setSearchName] = useState<string>(
     localStorage.getItem("searchKeyWord") || ""
   );
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
 
   const fetchCharacters = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch(
-        `https://rickandmortyapi.com/api/character/?name=${searchName}`
+        `https://rickandmortyapi.com/api/character/?page=1&name=${searchName}`
       );
       const data: ICharactersResponse = await response.json();
       if (data.results) {
@@ -28,8 +30,10 @@ const CharactersListPage: FC<CharactersListPageProps> = ({}) => {
       } else {
         setCharacters([]);
       }
-    } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+    } catch (error: any) {
+      console.log(error.error);
+      setIsLoading(false);
     }
   };
 
@@ -39,7 +43,13 @@ const CharactersListPage: FC<CharactersListPageProps> = ({}) => {
   };
 
   useEffect(() => {
-    fetchCharacters();
+    // Debouncing
+    if (!characters.length) {
+      fetchCharacters();      
+    } else {
+      const getFilteredData = setTimeout(fetchCharacters, 500);  
+      return () => clearTimeout(getFilteredData);
+    }
   }, [searchName]);
 
   return (
@@ -60,6 +70,9 @@ const CharactersListPage: FC<CharactersListPageProps> = ({}) => {
             className="characters__searchicon"
           />
         </form>
+        {!characters.length && !isLoading && (
+          <p style={{ textAlign: "center" }}>No characters found</p>
+        )}
         <div className="characters__list">
           {characters.map((character: ICharacter) => (
             <CardItem
