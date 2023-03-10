@@ -1,0 +1,25 @@
+ul {
+  list-style: none;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header {
+  padding: 20px 0;
+
+  &__link {
+    text-decoration: none;
+    color: #000;
+  
+    &:hover {
+      text-decoration: underline;
+    }
+  }  
+}
+
+.active {
+  font-weight: 700;
+}
+
