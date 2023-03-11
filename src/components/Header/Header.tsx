@@ -22,7 +22,7 @@ const Header: FC<HeaderProps> = ({ user, onLogOut }) => {
             </li>
             {user ? (
               <>
-                <li>{user.name}</li>
+                <li>{user.identifier}</li>
                 <li>
                   <Link to="/" className="header__link" onClick={onLogOut}>
                     Log Out
@@ -32,12 +32,12 @@ const Header: FC<HeaderProps> = ({ user, onLogOut }) => {
             ) : (
               <>
                 <li>
-                  <NavLink to="/sing-in" className="header__link">
+                  <NavLink to="/sign-in" className="header__link">
                     Sign In
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/sing-up" className="header__link">
+                  <NavLink to="/sign-up" className="header__link">
                     Sign Up
                   </NavLink>
                 </li>

@@ -3,8 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Header from "./components/Header/Header";
 import CharacterDetailsPage from "./pages/CharacterDetailsPage/CharacterDetailsPage";
 import CharactersListPage from "./pages/CharactersListPage/CharactersListPage";
-import SignInPage from "./pages/SignInPage/SignInPage";
-import SingUpPage from "./pages/SignUpPage/SignUpPage";
+import AuthPage from "./pages/AuthPage/AuthPage";
 import { IUser } from "./types/user";
 
 const App = () => {
@@ -30,8 +29,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<CharactersListPage />} />
         <Route path="/:id" element={<CharacterDetailsPage />} />
-        <Route path="/sing-in" element={<SignInPage onSetUser={setUser} />} />
-        <Route path="/sing-up" element={<SingUpPage onSetUser={setUser} />} />
+        <Route path="/sign-in" element={<AuthPage onSetUser={setUser} />} />
+        <Route path="/sign-up" element={<AuthPage onSetUser={setUser} />} />
       </Routes>
     </>
   );

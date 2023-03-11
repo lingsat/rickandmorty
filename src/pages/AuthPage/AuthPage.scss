@@ -1,0 +1,144 @@
+.auth {
+  margin: 30px auto;
+  padding: 30px 70px;
+  width: 100%;
+  max-width: 500px;
+  border: 1px solid #d5e0d5;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &__title {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  &__input {
+    display: block;
+    margin: 0 auto;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 150%;
+    color: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+  }
+
+  &__brake {
+    margin: 0.5rem 0;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+    position: relative;
+
+    &::before, &::after {
+      content: "";
+      width: 45%;
+      height: 1px;
+      background-color: rgba(0, 0, 0, 0.5);
+      position: absolute;
+      top: 50%;      
+      z-index: -1;
+      transform: translateY(-50%);
+    }
+
+    &::before {
+      left: 0;
+    }
+
+    &::after {
+      right: 0;
+    }
+  }
+
+  &__footer {
+    margin-top: 1rem;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+    
+    a {
+      color: #108a00;   
+      text-decoration: none;   
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.auth__btn {
+  padding: 0.5rem 1rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 150%;
+  color: #fff;
+  border-radius: 25px;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.1s linear;  
+
+  img {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    z-index: 1;
+    transform: translateY(-50%);
+  }
+  
+  &--submit {
+    background-color: #108a00;
+
+    &:hover {
+      background-color: #18b403;
+    }
+  }
+
+  &--google {
+    background-color: #4285f4;
+
+    &:hover {
+      background-color: #71a2f1;
+    }
+  }
+
+  &--fb {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+
+    &:hover {
+      background-color: #ebe8e8;
+    }
+  }
+
+  &:disabled {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: gray;
+    cursor: not-allowed;
+  }
+}
+
+
+@media(max-width: 575.98px) {
+  .signin {
+    padding: 20px 30px;
+  }
+}
+
+@media(max-width: 399.98px) {
+  .signin {
+    padding: 0;
+    border: none;
+  }
+}
