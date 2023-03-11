@@ -1,4 +1,4 @@
-.signin {
+.signup{
   margin: 30px auto;
   padding: 30px 70px;
   width: 100%;
@@ -60,13 +60,13 @@
 }
 
 @media(max-width: 575.98px) {
-  .signin {
+  .signup {
     padding: 20px 30px;
   }
 }
 
 @media(max-width: 399.98px) {
-  .signin {
+  .signup {
     padding: 0;
     border: none;
   }

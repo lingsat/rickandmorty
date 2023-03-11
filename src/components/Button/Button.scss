@@ -7,8 +7,19 @@
   color: #fff;
   border-radius: 25px;
   border: none;
+  position: relative;
   cursor: pointer;
-  transition: all 0.1s linear;
+  transition: all 0.1s linear;  
+
+  &__img {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    z-index: 1;
+    transform: translateY(-50%);
+  }
   
   &--green {
     background-color: #108a00;

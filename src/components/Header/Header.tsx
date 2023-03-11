@@ -1,11 +1,15 @@
 import { FC } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { IUser } from "../../types/user";
 import Container from "../Container/Container";
 import "./Header.scss";
 
-interface HeaderProps {}
+interface HeaderProps {
+  user: IUser | null;
+  onLogOut: () => void;
+}
 
-const Header: FC<HeaderProps> = ({}) => {
+const Header: FC<HeaderProps> = ({ user, onLogOut }) => {
   return (
     <header className="header">
       <Container>
@@ -16,16 +20,29 @@ const Header: FC<HeaderProps> = ({}) => {
                 Home
               </NavLink>
             </li>
-            <li>
-              <NavLink to="/sing-in" className="header__link">
-                Sign In
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/sing-up" className="header__link">
-                Sign Up
-              </NavLink>
-            </li>
+            {user ? (
+              <>
+                <li>{user.name}</li>
+                <li>
+                  <Link to="/" className="header__link" onClick={onLogOut}>
+                    Log Out
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <NavLink to="/sing-in" className="header__link">
+                    Sign In
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/sing-up" className="header__link">
+                    Sign Up
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </Container>

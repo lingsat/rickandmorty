@@ -1,17 +1,37 @@
-import { Route, Routes } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
 import Header from "./components/Header/Header";
-import CharacterDetailsPage from './pages/CharacterDetailsPage/CharacterDetailsPage';
-import CharactersListPage from './pages/CharactersListPage/CharactersListPage';
-import SignInPage from './pages/SignInPage/SignInPage';
+import CharacterDetailsPage from "./pages/CharacterDetailsPage/CharacterDetailsPage";
+import CharactersListPage from "./pages/CharactersListPage/CharactersListPage";
+import SignInPage from "./pages/SignInPage/SignInPage";
+import SingUpPage from "./pages/SignUpPage/SignUpPage";
+import { IUser } from "./types/user";
 
 const App = () => {
+  const [user, setUser] = useState<IUser | null>(null);
+  
+  const logOut = () => {
+    localStorage.clear();
+    setUser(null);
+  }
+  
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      const authedUser = JSON.parse(localStorage.getItem("user")!);
+      setUser(authedUser);
+    } else {
+      setUser(null);
+    }
+  }, [])
+
   return (
     <>
-      <Header />
+      <Header user={user} onLogOut={logOut} />
       <Routes>
-        <Route path='/' element={<CharactersListPage />} />
-        <Route path='/:id' element={<CharacterDetailsPage />} />
-        <Route path='/sing-in' element={<SignInPage />} />
+        <Route path="/" element={<CharactersListPage />} />
+        <Route path="/:id" element={<CharacterDetailsPage />} />
+        <Route path="/sing-in" element={<SignInPage onSetUser={setUser} />} />
+        <Route path="/sing-up" element={<SingUpPage onSetUser={setUser} />} />
       </Routes>
     </>
   );

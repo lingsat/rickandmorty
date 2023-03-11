@@ -4,30 +4,32 @@ import Button from "../../components/Button/Button";
 import Container from "../../components/Container/Container";
 import Input from "../../components/Input/Input";
 import {
-  signInWithEmail,
-  signInWithFaceBook,
+  signUpWithEmail,
   signInWithGoogle,
+  signInWithFaceBook,
 } from "../../firebase";
 import { IUser } from "../../types/user";
-import "./SignInPage.scss";
+import "./SignUpPage.scss";
 
-interface SingInPageProps {
+interface SingUpPageProps {
   onSetUser: (user: IUser | null) => void;
 }
 
 interface IAuthData {
+  name: string;
   email: string;
   password: string;
 }
 
-const SingInPage: FC<SingInPageProps> = ({ onSetUser }) => {
-  const [btnDisabled, setBtnDisabled] = useState<boolean>(false);
+const SingUpPage: FC<SingUpPageProps> = ({ onSetUser }) => {
+  const [btnEmailDisabled, setBtnEmailDisabled] = useState<boolean>(false);
+  const navigate = useNavigate();
+
   const [authData, setAuthData] = useState<IAuthData>({
+    name: "",
     email: "",
     password: "",
   });
-
-  const navigate = useNavigate();
 
   const handleGoogleAuth = async () => {
     try {
@@ -59,6 +61,12 @@ const SingInPage: FC<SingInPageProps> = ({ onSetUser }) => {
     }
   };
 
+  const handleNameInutChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAuthData((prevData) => {
+      return { ...prevData, name: e.target.value };
+    });
+  };
+
   const handleEmailInutChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAuthData((prevData) => {
       return { ...prevData, email: e.target.value };
@@ -73,9 +81,9 @@ const SingInPage: FC<SingInPageProps> = ({ onSetUser }) => {
 
   const handleFormSubmit = async () => {
     try {
-      const data = await signInWithEmail(authData);
+      const data = await signUpWithEmail(authData);
       const newUser: IUser = {
-        name: "John",
+        name: authData.name,
         email: data.user.email!,
       };
       localStorage.setItem("user", JSON.stringify(newUser));
@@ -88,8 +96,8 @@ const SingInPage: FC<SingInPageProps> = ({ onSetUser }) => {
 
   return (
     <Container>
-      <form className="signin">
-        <h2 className="signin__title">Sign In</h2>
+      <form className="signup">
+        <h2 className="signup__title">Sign Up</h2>
         <Button
           text="Continue with Google"
           btnStyle="BLUE"
@@ -102,32 +110,35 @@ const SingInPage: FC<SingInPageProps> = ({ onSetUser }) => {
           iconStyle="FB"
           onClick={handleFacebookAuth}
         />
-        <p className="signin__brake">or</p>
+        <p className="signup__brake">or</p>
+        <Input
+          name="name"
+          placeholder="Name"
+          onChange={(e) => handleNameInutChange(e)}
+        />
         <Input
           name="email"
           placeholder="Email"
           type="email"
-          value={authData.email}
           onChange={(e) => handleEmailInutChange(e)}
         />
         <Input
           name="password"
           placeholder="Password"
           type="password"
-          value={authData.password}
           onChange={(e) => handlePasswordInutChange(e)}
         />
         <Button
-          text="Sign in with Email"
-          disabled={btnDisabled}
+          text="Sign Up with Email"
+          disabled={btnEmailDisabled}
           onClick={handleFormSubmit}
         />
-        <p className="signin__footer">
-          Don`t have an account? <NavLink to="/sign-up">Sign Up</NavLink>
+        <p className="signup__footer">
+          Already have an account? <NavLink to="/sign-up">Sign In</NavLink>
         </p>
       </form>
     </Container>
   );
 };
 
-export default SingInPage;
+export default SingUpPage;

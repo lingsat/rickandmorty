@@ -1,4 +1,6 @@
 import { ComponentProps, FC } from "react";
+import googleIcon from '../../assets/images/google.svg';
+import fbIcon from '../../assets/images/facebook.svg';
 import "./Button.scss";
 
 enum ButtonStyle {
@@ -7,11 +9,18 @@ enum ButtonStyle {
   WHITE = "WHITE",
 }
 
+enum IconStyle {
+  GOOGLE = "GOOGLE",
+  FB = "FB",
+  NONE = "NONE",
+}
+
 interface ButtonProps {
   text: string;
   disabled?: ComponentProps<"button">["disabled"];
   type?: ComponentProps<"button">["type"];
   btnStyle?: keyof typeof ButtonStyle;
+  iconStyle?: keyof typeof IconStyle;
   onClick?: ComponentProps<"button">["onClick"];
 }
 
@@ -20,10 +29,10 @@ const Button: FC<ButtonProps> = ({
   disabled,
   type = "button",
   btnStyle = ButtonStyle.GREEN,
+  iconStyle = IconStyle.NONE,
   onClick,
 }) => {
-  let buttonStyleClass: string = "";
-
+  let buttonStyleClass: string = "";  
   switch (btnStyle) {
     case ButtonStyle.GREEN:
       buttonStyleClass = "green";
@@ -38,6 +47,22 @@ const Button: FC<ButtonProps> = ({
       break;
   }
 
+  let icon = null;
+  switch (iconStyle) {
+    case IconStyle.NONE:
+      icon = null;
+      break;
+    case IconStyle.GOOGLE:
+      icon = googleIcon;
+      break;
+    case IconStyle.FB:
+      icon = fbIcon;
+      break;
+
+    default:
+      break;
+  }
+
   return (
     <button
       className={`button button--${buttonStyleClass}`}
@@ -45,6 +70,7 @@ const Button: FC<ButtonProps> = ({
       onClick={onClick}
       disabled={disabled}
     >
+      {icon && <img className='button__img' src={icon} alt="Google icon" />}
       {text}
     </button>
   );
