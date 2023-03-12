@@ -1,10 +1,10 @@
 import {
   getAuth,
   GoogleAuthProvider,
-  FacebookAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  GithubAuthProvider,
 } from "firebase/auth";
 import { app } from "../firebase";
 import { IAuthOutData } from "../types/authOutData";
@@ -17,10 +17,10 @@ export const signInWithGoogle = () => {
   return signInWithPopup(auth, googleProvider);
 };
 
-// Facebook signIn with Popup
-const facebookProvider = new FacebookAuthProvider();
-export const signInWithFaceBook = () => {
-  return signInWithPopup(auth, facebookProvider);
+// GitHub signIn with Popup
+const githubProvider = new GithubAuthProvider();
+export const signInWithGitHub = () => {
+  return signInWithPopup(auth, githubProvider);
 };
 
 // Email/Password signUp(registration new user)

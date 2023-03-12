@@ -3,13 +3,13 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Container from "../../components/Container/Container";
 import {
   signInWithEmail,
-  signInWithFaceBook,
+  signInWithGitHub,
   signInWithGoogle,
   signUpWithEmail,
 } from "../../services/auth";
 import { IUser } from "../../types/user";
 import googleIcon from "../../assets/images/google.svg";
-import fbIcon from "../../assets/images/facebook.svg";
+import gitIcon from "../../assets/images/github.svg";
 import "./AuthPage.scss";
 
 interface AuthPageProps {
@@ -50,14 +50,14 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
   });
   const [formIsValid, setFormIsValid] = useState<boolean>(false);
 
-  const handleExternalAuth = async (provider: "google" | "fb") => {
+  const handleExternalAuth = async (provider: "google" | 'github') => {
     try {
       let data: any;
       if (provider === "google") {
         data = await signInWithGoogle();
       }
-      if (provider === "fb") {
-        data = await signInWithFaceBook();
+      if (provider === "github") {
+        data = await signInWithGitHub();
       }
 
       const newUser: IUser = {
@@ -184,12 +184,12 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
           Continue with Google
         </button>
         <button
-          className="auth__btn auth__btn--fb"
+          className="auth__btn auth__btn--git"
           type="button"
-          onClick={() => handleExternalAuth('fb')}
+          onClick={() => handleExternalAuth('github')}
         >
-          <img className="button__img" src={fbIcon} alt="Facebook icon" />
-          Continue with Facebook
+          <img className="button__img" src={gitIcon} alt="GutHub icon" />
+          Continue with Github
         </button>
         <p className="auth__brake">or</p>
         <input
