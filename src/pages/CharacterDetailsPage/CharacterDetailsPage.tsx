@@ -2,8 +2,9 @@ import { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Container from "../../components/Container/Container";
 import arrowBack from "../../assets/images/arrowBack.svg";
-import "./CharacterDetailsPage.scss";
 import { ICharacter } from "../../types/charactersRes";
+import "./CharacterDetailsPage.scss";
+import InfoItem from "../../components/InfoItem/InfoItem";
 
 interface CharacterDetailsPageProps {}
 
@@ -15,7 +16,7 @@ const CharacterDetailsPage: FC<CharacterDetailsPageProps> = ({}) => {
   const fetchSingleCharacter = async () => {
     try {
       const response = await fetch(
-        `https://rickandmortyapi.com/api/character/${id}`
+        `${process.env.REACT_APP_API_URL}/${id}`
       );
       const data: ICharacter = await response.json();
       setSingleCharacter(data);
@@ -27,10 +28,6 @@ const CharacterDetailsPage: FC<CharacterDetailsPageProps> = ({}) => {
   useEffect(() => {
     fetchSingleCharacter();
   }, []);
-
-  // if (!singleCharacter) {
-  //   return <p style={{textAlign: 'center'}}>Loading...</p>;
-  // }
 
   return (
     <div className="details">
@@ -47,26 +44,26 @@ const CharacterDetailsPage: FC<CharacterDetailsPageProps> = ({}) => {
         <h2 className="details__name">{singleCharacter?.name}</h2>
         <h4 className="details__subtitle">Informations</h4>
         <div className="info">
-          <div className="info__item">
-            <h5 className="info__category">Gender</h5>
-            <p className="info__value">{singleCharacter?.gender}</p>
-          </div>
-          <div className="info__item">
-            <h5 className="info__category">Status</h5>
-            <p className="info__value">{singleCharacter?.status}</p>
-          </div>
-          <div className="info__item">
-            <h5 className="info__category">Specie</h5>
-            <p className="info__value">{singleCharacter?.species}</p>
-          </div>
-          <div className="info__item">
-            <h5 className="info__category">Origin</h5>
-            <p className="info__value">{singleCharacter?.origin.name}</p>
-          </div>
-          <div className="info__item">
-            <h5 className="info__category">Type</h5>
-            <p className="info__value">{singleCharacter?.type || "Unknown"}</p>
-          </div>
+          <InfoItem
+            category="Gender"
+            value={singleCharacter?.gender || "Unknown"}
+          />
+          <InfoItem
+            category="Status"
+            value={singleCharacter?.status || "Unknown"}
+          />
+          <InfoItem
+            category="Specie"
+            value={singleCharacter?.species || "Unknown"}
+          />
+          <InfoItem
+            category="Origin"
+            value={singleCharacter?.origin.name || "Unknown"}
+          />
+          <InfoItem
+            category="Type"
+            value={singleCharacter?.type || "Unknown"}
+          />
         </div>
       </Container>
     </div>

@@ -1,55 +1,13 @@
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  signInWithPopup,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
-} from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA8MPPggAUfT-0qPVjFEBuMGmfBo2gc5eY",
-  authDomain: "rickandmortyauth.firebaseapp.com",
-  projectId: "rickandmortyauth",
-  storageBucket: "rickandmortyauth.appspot.com",
-  messagingSenderId: "1059177780762",
-  appId: "1:1059177780762:web:4e3970fb8c33d2b15d63a3",
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_ID,
 };
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-
-const googleProvider = new GoogleAuthProvider();
-const facebookProvider = new FacebookAuthProvider();
-
-export const signInWithGoogle = () => {
-  return signInWithPopup(auth, googleProvider);
-};
-
-export const signInWithFaceBook = () => {
-  return signInWithPopup(auth, facebookProvider);
-};
-
-export const signUpWithEmail = (authData: {
-  email: string;
-  password: string;
-}) => {
-  return createUserWithEmailAndPassword(
-    auth,
-    authData.email,
-    authData.password
-  );
-};
-
-export const signInWithEmail = (authData: {
-  email: string;
-  password: string;
-}) => {
-  return signInWithEmailAndPassword(
-    auth,
-    authData.email,
-    authData.password
-  );
-};

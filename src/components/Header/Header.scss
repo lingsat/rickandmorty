@@ -1,3 +1,16 @@
+.header {
+  padding: 20px 0;
+
+  &__link {
+    text-decoration: none;
+    color: #000;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
 ul {
   list-style: none;
   display: flex;
@@ -6,20 +19,12 @@ ul {
   gap: 1rem;
 }
 
-.header {
-  padding: 20px 0;
-
-  &__link {
-    text-decoration: none;
-    color: #000;
-  
-    &:hover {
-      text-decoration: underline;
-    }
-  }  
-}
-
 .active {
   font-weight: 700;
 }
 
+@media (max-width: 575.98px) {
+  .header {
+    padding: 15px 0;
+  }
+}

@@ -61,25 +61,6 @@
   padding-left: 1rem;
   max-width: 413px;
   text-align: left;
-
-  &__item {
-    padding: 9px 16px 12px 0;
-    border-bottom: 1px solid rgba(33, 33, 33, 0.08);
-  }
-
-  &__category {
-    font-size: 1rem;
-    line-height: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 0.15px;
-    color: #081f32;
-  }
-
-  &__value {
-    font-size: 0.875rem;
-    line-height: 1.25rem;    letter-spacing: 0.25px;
-    color: #6e798c;
-  }
 }
 
 @media (max-width: 768.98px) {

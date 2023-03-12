@@ -17,13 +17,14 @@ const CharactersListPage: FC<CharactersListPageProps> = ({}) => {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
 
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [pagesCount, setPagesCount] = useState<number>(0);
+  const [pagesCount, setPagesCount] = useState<number>(1);
 
+  // Need refactoring - too much rerendering
   const fetchCharacters = async () => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `https://rickandmortyapi.com/api/character/?page=${currentPage + 1}&name=${searchName}`
+        `${process.env.REACT_APP_API_URL}/?page=${currentPage + 1}&name=${searchName}`
       );
       const data: ICharactersResponse = await response.json();
       if (data.results) {

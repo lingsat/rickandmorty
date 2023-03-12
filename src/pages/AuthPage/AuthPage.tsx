@@ -6,7 +6,7 @@ import {
   signInWithFaceBook,
   signInWithGoogle,
   signUpWithEmail,
-} from "../../firebase";
+} from "../../services/auth";
 import { IUser } from "../../types/user";
 import googleIcon from "../../assets/images/google.svg";
 import fbIcon from "../../assets/images/facebook.svg";
@@ -50,28 +50,20 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
   });
   const [formIsValid, setFormIsValid] = useState<boolean>(false);
 
-  const handleGoogleAuth = async () => {
+  const handleExternalAuth = async (provider: "google" | "fb") => {
     try {
-      const data: any = await signInWithGoogle();
-      const newUser: IUser = {
-        identifier: data.user.displayName,
-        token: data.user.accessToken,
-      };
-      localStorage.setItem("user", JSON.stringify(newUser));
-      onSetUser(newUser);
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      let data: any;
+      if (provider === "google") {
+        data = await signInWithGoogle();
+      }
+      if (provider === "fb") {
+        data = await signInWithFaceBook();
+      }
 
-  const handleFacebookAuth = async () => {
-    try {
-      const data: any = await signInWithFaceBook();
       const newUser: IUser = {
         identifier: data.user.displayName,
         token: data.user.accessToken,
-      };
+      };      
       localStorage.setItem("user", JSON.stringify(newUser));
       onSetUser(newUser);
       navigate("/");
@@ -155,6 +147,7 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
     }
   };
 
+  // FormData validation - unDisable Submit button
   useEffect(() => {
     if (formErrors.email || formErrors.password) {
       setFormIsValid(false);
@@ -163,6 +156,7 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
     }
   }, [formErrors]);
 
+  // Set Form type - SignIn or Sign Up
   useEffect(() => {
     if (pathname === "/sign-in") {
       setSignInMode(true);
@@ -184,7 +178,7 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
         <button
           className="auth__btn auth__btn--google"
           type="button"
-          onClick={handleGoogleAuth}
+          onClick={() => handleExternalAuth('google')}
         >
           <img src={googleIcon} alt="Google icon" />
           Continue with Google
@@ -192,7 +186,7 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
         <button
           className="auth__btn auth__btn--fb"
           type="button"
-          onClick={handleFacebookAuth}
+          onClick={() => handleExternalAuth('fb')}
         >
           <img className="button__img" src={fbIcon} alt="Facebook icon" />
           Continue with Facebook
