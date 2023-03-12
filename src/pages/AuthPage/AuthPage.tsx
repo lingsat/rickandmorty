@@ -21,17 +21,34 @@ interface IAuthData {
   password: string;
 }
 
+interface IFormValid {
+  email: boolean;
+  password: boolean;
+}
+
+interface IFormError {
+  email: string | null;
+  password: string | null;
+}
+
 const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
   const [signInMode, setSignInMode] = useState<boolean>(true);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
-  const [btnDisabled, setBtnDisabled] = useState<boolean>(false);
   const [authData, setAuthData] = useState<IAuthData>({
     email: "",
     password: "",
   });
-
-  const navigate = useNavigate();
+  const [formInputClicked, setFormInputClicked] = useState<IFormValid>({
+    email: false,
+    password: false,
+  });
+  const [formErrors, setFormErrors] = useState<IFormError>({
+    email: "Email can`t be empty",
+    password: "Password can`t be empty",
+  });
+  const [formIsValid, setFormIsValid] = useState<boolean>(false);
 
   const handleGoogleAuth = async () => {
     try {
@@ -63,16 +80,58 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
     }
   };
 
-  const handleInutChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.name === 'email') {
-      setAuthData((prevData) => {
-        return { ...prevData, email: e.target.value };
-      });
+  const blurHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    switch (event.target.name) {
+      case "email":
+        setFormInputClicked((prevData) => {
+          return { ...prevData, email: true };
+        });
+        break;
+      case "password":
+        setFormInputClicked((prevData) => {
+          return { ...prevData, password: true };
+        });
+        break;
     }
-    if (e.target.name === 'password') {
-      setAuthData((prevData) => {
-        return { ...prevData, password: e.target.value };
-      });
+  };
+
+  const handleInutChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setAuthData((prevData) => {
+      return { ...prevData, [name]: value };
+    });
+
+    if (name === "email") {
+      const isEmailValid: boolean = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(
+        value
+      );
+      if (!isEmailValid) {
+        setFormErrors((prevData) => {
+          return { ...prevData, email: "Email is invalid" };
+        });
+      } else {
+        setFormErrors((prevData) => {
+          return { ...prevData, email: null };
+        });
+      }
+    }
+
+    if (name === "password") {
+      const isPasswordValid: boolean =
+        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value);
+      if (!isPasswordValid) {
+        setFormErrors((prevData) => {
+          return {
+            ...prevData,
+            password: "Password(Min 8 sym, at least 1 letter and 1 number)",
+          };
+        });
+      } else {
+        setFormErrors((prevData) => {
+          return { ...prevData, password: null };
+        });
+      }
     }
   };
 
@@ -95,6 +154,14 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
       alert(`Failed with error code: ${error.code}`);
     }
   };
+
+  useEffect(() => {
+    if (formErrors.email || formErrors.password) {
+      setFormIsValid(false);
+    } else {
+      setFormIsValid(true);
+    }
+  }, [formErrors]);
 
   useEffect(() => {
     if (pathname === "/sign-in") {
@@ -137,19 +204,28 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
           name="email"
           placeholder="Email"
           value={authData.email}
-          onChange={(e) => handleInutChange(e)}
+          onBlur={blurHandler}
+          onChange={handleInutChange}
         />
+        {formInputClicked.email && formErrors.email && (
+          <p className="auth__error">{formErrors.email}</p>
+        )}
         <input
           className="auth__input"
           type="password"
           name="password"
           placeholder="Password"
           value={authData.password}
-          onChange={(e) => handleInutChange(e)}
+          onBlur={blurHandler}
+          onChange={handleInutChange}
         />
+        {formInputClicked.password && formErrors.password && (
+          <p className="auth__error">{formErrors.password}</p>
+        )}
         <button
           className="auth__btn auth__btn--submit"
           type="button"
+          disabled={!formIsValid}
           onClick={handleFormSubmit}
         >
           {signInMode ? "Sign in" : "Sign Up"} with Email

@@ -29,6 +29,7 @@
     color: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(0, 0, 0, 0.5);
     border-radius: 8px;
+    outline: none;
   }
 
   &__brake {
@@ -55,6 +56,11 @@
     &::after {
       right: 0;
     }
+  }
+
+  &__error {
+    font-size: 0.75rem;
+    color: #ed4337;
   }
 
   &__footer {
@@ -131,13 +137,13 @@
 
 
 @media(max-width: 575.98px) {
-  .signin {
+  .auth {
     padding: 20px 30px;
   }
 }
 
 @media(max-width: 399.98px) {
-  .signin {
+  .auth {
     padding: 0;
     border: none;
   }
