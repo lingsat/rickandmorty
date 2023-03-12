@@ -5,6 +5,7 @@ import searchIcon from "../../assets/images/search.svg";
 import "./CharactersListPage.scss";
 import CardItem from "../../components/CardItem/CardItem";
 import { ICharacter, ICharactersResponse } from "../../types/charactersRes";
+import ReactPaginate from "react-paginate";
 
 interface CharactersListPageProps {}
 
@@ -15,11 +16,14 @@ const CharactersListPage: FC<CharactersListPageProps> = ({}) => {
   );
   const [isLoading, setIsLoading] = useState<Boolean>(false);
 
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [pagesCount, setPagesCount] = useState<number>(0);
+
   const fetchCharacters = async () => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `https://rickandmortyapi.com/api/character/?page=1&name=${searchName}`
+        `https://rickandmortyapi.com/api/character/?page=${currentPage + 1}&name=${searchName}`
       );
       const data: ICharactersResponse = await response.json();
       if (data.results) {
@@ -27,6 +31,7 @@ const CharactersListPage: FC<CharactersListPageProps> = ({}) => {
           a.name.localeCompare(b.name)
         );
         setCharacters(sortedCharactersArr);
+        setPagesCount(data.info.pages);
       } else {
         setCharacters([]);
       }
@@ -38,19 +43,24 @@ const CharactersListPage: FC<CharactersListPageProps> = ({}) => {
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCurrentPage(0);
     setSearchName(e.target.value);
     localStorage.setItem("searchKeyWord", e.target.value);
   };
 
+  const handlePageClick = (event: any) => {
+    setCurrentPage(event.selected);
+  }
+
   useEffect(() => {
     // Debouncing
     if (!characters.length) {
-      fetchCharacters();      
+      fetchCharacters();
     } else {
-      const getFilteredData = setTimeout(fetchCharacters, 500);  
+      const getFilteredData = setTimeout(fetchCharacters, 500);
       return () => clearTimeout(getFilteredData);
     }
-  }, [searchName]);
+  }, [searchName, currentPage]);
 
   return (
     <div className="characters">
@@ -84,6 +94,17 @@ const CharactersListPage: FC<CharactersListPageProps> = ({}) => {
             />
           ))}
         </div>
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel=">"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={3}
+          pageCount={pagesCount}
+          previousLabel="<"
+          initialPage={currentPage}
+          containerClassName='pagination'
+          activeLinkClassName='active__page'
+        />
       </Container>
     </div>
   );
