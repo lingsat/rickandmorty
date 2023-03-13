@@ -38,13 +38,14 @@
     color: rgba(0, 0, 0, 0.5);
     position: relative;
 
-    &::before, &::after {
+    &::before,
+    &::after {
       content: "";
       width: 45%;
       height: 1px;
       background-color: rgba(0, 0, 0, 0.5);
       position: absolute;
-      top: 50%;      
+      top: 50%;
       z-index: -1;
       transform: translateY(-50%);
     }
@@ -67,10 +68,10 @@
     margin-top: 1rem;
     text-align: center;
     color: rgba(0, 0, 0, 0.5);
-    
+
     a {
-      color: #108a00;   
-      text-decoration: none;   
+      color: #108a00;
+      text-decoration: none;
 
       &:hover {
         text-decoration: underline;
@@ -90,7 +91,7 @@
   border: none;
   position: relative;
   cursor: pointer;
-  transition: all 0.1s linear;  
+  transition: all 0.1s linear;
 
   img {
     width: 30px;
@@ -101,7 +102,7 @@
     z-index: 1;
     transform: translateY(-50%);
   }
-  
+
   &--submit {
     background-color: #108a00;
 
@@ -135,14 +136,13 @@
   }
 }
 
-
-@media(max-width: 575.98px) {
+@media (max-width: 575.98px) {
   .auth {
     padding: 20px 30px;
   }
 }
 
-@media(max-width: 399.98px) {
+@media (max-width: 399.98px) {
   .auth {
     padding: 0;
     border: none;

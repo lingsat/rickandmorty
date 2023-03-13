@@ -8,12 +8,12 @@ import { IUser } from "./types/user";
 
 const App = () => {
   const [user, setUser] = useState<IUser | null>(null);
-  
+
   const logOut = () => {
     localStorage.clear();
     setUser(null);
-  }
-  
+  };
+
   useEffect(() => {
     if (localStorage.getItem("user")) {
       const authedUser = JSON.parse(localStorage.getItem("user")!);
@@ -21,7 +21,7 @@ const App = () => {
     } else {
       setUser(null);
     }
-  }, [])
+  }, []);
 
   return (
     <>

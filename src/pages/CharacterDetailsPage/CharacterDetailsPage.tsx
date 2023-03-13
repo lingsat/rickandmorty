@@ -1,27 +1,31 @@
 import { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Container from "../../components/Container/Container";
-import arrowBack from "../../assets/images/arrowBack.svg";
-import { ICharacter } from "../../types/charactersRes";
-import "./CharacterDetailsPage.scss";
 import InfoItem from "../../components/InfoItem/InfoItem";
+import { ICharacter } from "../../types/charactersRes";
+import arrowBack from "../../assets/images/arrowBack.svg";
+import "./CharacterDetailsPage.scss";
 
 interface CharacterDetailsPageProps {}
 
 const CharacterDetailsPage: FC<CharacterDetailsPageProps> = ({}) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [singleCharacter, setSingleCharacter] = useState<ICharacter>();
+  const [singleCharacter, setSingleCharacter] = useState<ICharacter | null>(
+    null
+  );
 
   const fetchSingleCharacter = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/${id}`
-      );
-      const data: ICharacter = await response.json();
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/${id}`);
+    const data = await response.json();
+    if (data.error) {
+      alert(data.error);
+      navigate("/");
+      return;
+    } else if (data.id) {
       setSingleCharacter(data);
-    } catch (error) {
-      console.log(error);
+    } else {
+      setSingleCharacter(null);
     }
   };
 

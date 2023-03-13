@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { IUser } from "../../types/user";
 import Container from "../Container/Container";
+import { IUser } from "../../types/user";
 import "./Header.scss";
 
 interface HeaderProps {

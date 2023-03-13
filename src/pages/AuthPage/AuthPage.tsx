@@ -1,12 +1,16 @@
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Container from "../../components/Container/Container";
 import {
   signInWithEmail,
   signInWithGitHub,
   signInWithGoogle,
   signUpWithEmail,
 } from "../../services/auth";
+import {
+  checkEmailValid,
+  checkPasswordValid,
+} from "../../utils/formValidation";
+import Container from "../../components/Container/Container";
 import { IUser } from "../../types/user";
 import googleIcon from "../../assets/images/google.svg";
 import gitIcon from "../../assets/images/github.svg";
@@ -50,20 +54,23 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
   });
   const [formIsValid, setFormIsValid] = useState<boolean>(false);
 
-  const handleExternalAuth = async (provider: "google" | 'github') => {
+  // Authorization with Google and GitHub
+  const handleExternalAuth = async (provider: "google" | "github") => {
     try {
       let data: any;
       if (provider === "google") {
         data = await signInWithGoogle();
-      }
-      if (provider === "github") {
+      } else if (provider === "github") {
         data = await signInWithGitHub();
+      } else {
+        alert("Wrong authorization provider. Try else!");
+        navigate("/sign-in");
+        return;
       }
-
       const newUser: IUser = {
         identifier: data.user.displayName,
         token: data.user.accessToken,
-      };      
+      };
       localStorage.setItem("user", JSON.stringify(newUser));
       onSetUser(newUser);
       navigate("/");
@@ -72,61 +79,46 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
     }
   };
 
+  // Form validation - check if input was clicked to show error message, if value invalid
   const blurHandler = (event: ChangeEvent<HTMLInputElement>) => {
     switch (event.target.name) {
       case "email":
-        setFormInputClicked((prevData) => {
-          return { ...prevData, email: true };
-        });
+        setFormInputClicked((prev) => ({ ...prev, email: true }));
         break;
       case "password":
-        setFormInputClicked((prevData) => {
-          return { ...prevData, password: true };
-        });
+        setFormInputClicked((prev) => ({ ...prev, password: true }));
+        break;
+      default:
         break;
     }
   };
 
+  // Save form values to state and values validation
   const handleInutChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-
-    setAuthData((prevData) => {
-      return { ...prevData, [name]: value };
-    });
+    setAuthData((prev) => ({ ...prev, [name]: value }));
 
     if (name === "email") {
-      const isEmailValid: boolean = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(
-        value
-      );
-      if (!isEmailValid) {
-        setFormErrors((prevData) => {
-          return { ...prevData, email: "Email is invalid" };
-        });
+      if (!checkEmailValid(value)) {
+        setFormErrors((prev) => ({ ...prev, email: "Email is invalid" }));
       } else {
-        setFormErrors((prevData) => {
-          return { ...prevData, email: null };
-        });
+        setFormErrors((prev) => ({ ...prev, email: null }));
       }
     }
 
     if (name === "password") {
-      const isPasswordValid: boolean =
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value);
-      if (!isPasswordValid) {
-        setFormErrors((prevData) => {
-          return {
-            ...prevData,
-            password: "Password(Min 8 sym, at least 1 letter and 1 number)",
-          };
-        });
+      if (!checkPasswordValid(value)) {
+        setFormErrors((prev) => ({
+          ...prev,
+          password: "Password(Min 8 sym, at least 1 letter and 1 number)",
+        }));
       } else {
-        setFormErrors((prevData) => {
-          return { ...prevData, password: null };
-        });
+        setFormErrors((prev) => ({ ...prev, password: null }));
       }
     }
   };
 
+  // Form submit - signIn or signUp
   const handleFormSubmit = async () => {
     try {
       let data: any;
@@ -156,19 +148,26 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
     }
   }, [formErrors]);
 
-  // Set Form type - SignIn or Sign Up
+  // Clear form
+  const clearForm = () => {
+    setAuthData({ email: "", password: "" });
+    setFormInputClicked({ email: false, password: false });
+    setFormErrors({
+      email: "Email can`t be empty",
+      password: "Password can`t be empty",
+    });
+    setFormIsValid(false);
+  };
+
+  // Set Form type - SignIn or Sign Up. Clear form data
   useEffect(() => {
     if (pathname === "/sign-in") {
       setSignInMode(true);
     }
-
     if (pathname === "/sign-up") {
       setSignInMode(false);
     }
-    setAuthData({
-      email: "",
-      password: "",
-    });
+    clearForm();
   }, [pathname]);
 
   return (
@@ -178,7 +177,7 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
         <button
           className="auth__btn auth__btn--google"
           type="button"
-          onClick={() => handleExternalAuth('google')}
+          onClick={() => handleExternalAuth("google")}
         >
           <img src={googleIcon} alt="Google icon" />
           Continue with Google
@@ -186,7 +185,7 @@ const AuthPage: FC<AuthPageProps> = ({ onSetUser }) => {
         <button
           className="auth__btn auth__btn--git"
           type="button"
-          onClick={() => handleExternalAuth('github')}
+          onClick={() => handleExternalAuth("github")}
         >
           <img className="button__img" src={gitIcon} alt="GutHub icon" />
           Continue with Github

@@ -1,6 +1,14 @@
 .header {
   padding: 20px 0;
 
+  ul {
+    list-style: none;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 1rem;
+  }
+
   &__link {
     text-decoration: none;
     color: #000;
@@ -9,14 +17,6 @@
       text-decoration: underline;
     }
   }
-}
-
-ul {
-  list-style: none;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  gap: 1rem;
 }
 
 .active {
